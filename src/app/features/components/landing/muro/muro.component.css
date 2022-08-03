@@ -1,0 +1,9 @@
+.landing__card {
+    transition: all 400ms ease;
+}
+
+.landing__card:hover {
+    transition: all 400ms ease;
+    transform: scale(110%);
+    cursor: pointer;
+}

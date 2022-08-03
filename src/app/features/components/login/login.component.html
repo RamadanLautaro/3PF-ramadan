@@ -1,0 +1,27 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        
+        <div class="col-12 text-center">
+            <img src="../../../../assets/img/login.png" class="login__icon">
+            <h1 *ngIf="!errorLogin" class="fs-1 fw-light text-center purpleText mt-3">LOGIN</h1>
+            <h1 *ngIf="errorLogin" class="fs-1 fw-bold text-center text-danger mt-3">USUARIO INCORRECTO</h1>
+        </div>
+
+        <form [formGroup]="formularioLogin" (ngSubmit)="validarLogin()" class="col-4 mt-5">
+            <div class="row justify-content-center">
+                <mat-form-field appearance="outline" class="col-12">
+                    <mat-label>Usuario</mat-label>
+                    <input type="text" matInput placeholder="Usuario..." formControlName="usuario">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                    <mat-label>Contraseña</mat-label>
+                    <input type="password" matInput placeholder="Contraseña..." formControlName="password">
+                </mat-form-field>
+                <div class="col-12 text-center mt-3">
+                    <button [disabled]="formularioLogin.invalid" type="submit" class="w-100" color="primary" mat-flat-button>GUARDAR</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>

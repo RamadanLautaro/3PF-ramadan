@@ -1,0 +1,37 @@
+.icono {
+    cursor: pointer;
+}
+
+.mat-row:hover {
+    background: linear-gradient(to right,#673ab7, #673ab7, white);
+}
+
+.mat-row:hover .mat-cell {
+    color: #fff;
+}
+
+.cardHeader {
+    position: relative;
+}
+
+.purpleText {
+    color: #673ab7;
+}
+
+.botonesHeader{
+    position: absolute;
+    right: 5%;
+}
+
+.drawer-container {
+    display: inherit;
+}
+
+.table_container {
+    height: 500px;
+    max-height: 500px;
+}
+
+.opcional {
+    background-color: #00be37;
+}

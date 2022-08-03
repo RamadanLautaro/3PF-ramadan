@@ -1,0 +1,11 @@
+.overflow-x-hidden{
+    overflow-x: hidden;
+}
+
+.purpleText {
+    color: #673ab7;
+}
+
+.navbar__brand:hover{
+cursor: pointer;
+}

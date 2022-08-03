@@ -1,0 +1,133 @@
+<div class="drawer-container">
+
+  <!-- LISTA CURSOS -->
+  <div class="row w-100 m-0 px-3 justify-content-center">
+    <div class="col-9">
+      <mat-card class="shadow-lg my-3">
+        <mat-card-header class="cardHeader mt-2 px-4">
+          <mat-card-title class="fs-1 fw-bold m-0 p-2 purpleText">LISTA DE CURSOS</mat-card-title>
+          <div class="botonesHeader">
+            <button mat-flat-button color="primary" (click)="agregar.toggle()">+ NUEVO</button>
+          </div>
+        </mat-card-header>
+        <mat-card-content class="row m-2 mt-3 p-4 table-responsive table_container">
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 col-12">
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Nombre </th>
+              <td mat-cell *matCellDef="let curso"> {{curso.nombre}} </td>
+            </ng-container>
+            <ng-container matColumnDef="profesor">
+              <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Profesor </th>
+              <td mat-cell *matCellDef="let curso"> {{curso.profesor}} </td>
+            </ng-container>
+            <ng-container matColumnDef="fechaInicio">
+              <th mat-header-cell *matHeaderCellDef class="purpleText text-center" appFontSize20> Fecha Inicio </th>
+              <td mat-cell *matCellDef="let curso" class="text-center"> {{curso.fechaInicio | date:'dd/MM/yyyy'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="fechaFin">
+              <th mat-header-cell *matHeaderCellDef class="purpleText text-center" appFontSize20> Fecha Fin </th>
+              <td mat-cell *matCellDef="let curso" class="text-center"> {{curso.fechaFin | date:'dd/MM/yyyy'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let curso; let i = index;" class="text-end">
+                <a class="icono text-primary px-2" (click)="cargarFormularioEditarCurso(curso); editar.toggle();">
+                  <mat-icon>edit</mat-icon>
+                </a>
+                <a class="icono text-danger px-2" (click)="eliminarCurso(curso.id)">
+                  <mat-icon>delete</mat-icon>
+                </a>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- AGREGAR CURSO -->
+    <mat-drawer #agregar class="col-12">
+      <div class="row w-100 justify-content-center">
+        <div class="col-12 text-center">
+            <h1 class="fs-1 fw-light my-5 purpleText">AGREGAR CURSO</h1>
+        </div>
+        <form [formGroup]="formularioAgregarCurso" (ngSubmit)="agregarCurso(); agregar.toggle();" class="col-4">
+            <div class="row">
+                <mat-form-field appearance="outline" class="col-12">
+                    <mat-label>Nombre del curso</mat-label>
+                    <input type="text" matInput placeholder="Nombre del curso..." formControlName="nombre">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                    <mat-label>Nombre del profesor</mat-label>
+                    <input type="text" matInput placeholder="Nombre del profesor..." formControlName="profesor">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Fecha de inicio</mat-label>
+                  <input matInput [matDatepicker]="dpAgregar1" placeholder="Fecha de inicio..." formControlName="fechaInicio">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matSuffix [for]="dpAgregar1" ></mat-datepicker-toggle>
+                  <mat-datepicker #dpAgregar1 disabled="false"></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Fecha de fin</mat-label>
+                  <input matInput [matDatepicker]="dpAgregar2" placeholder="Fecha de fin..." formControlName="fechaFin">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matSuffix [for]="dpAgregar2" ></mat-datepicker-toggle>
+                  <mat-datepicker #dpAgregar2 disabled="false"></mat-datepicker>
+                </mat-form-field>
+                <div class="col-6 text-center mt-5 pt-5">
+                  <button (click)="agregar.toggle()" type="button" class="btn-secondary w-100" mat-flat-button>CANCELAR</button>
+                </div>
+                <div class="col-6 text-center mt-5 pt-5">
+                  <button [disabled]="formularioAgregarCurso.invalid" type="submit" class="w-100" color="primary" mat-flat-button>GUARDAR</button>
+                </div>
+            </div>
+        </form>
+      </div>
+    </mat-drawer>
+    
+    <!-- EDITAR CURSO -->
+    <mat-drawer #editar position="end" class="col-12">
+      <div class="row w-100 justify-content-center">
+          <div class="col-12 text-center">
+              <h1 class="fs-1 fw-light my-5 purpleText">EDITAR CURSO</h1>
+          </div>
+          <form [formGroup]="formularioEditarCurso" (ngSubmit)="editarCurso(); editar.toggle()" class="col-4">
+              <div class="row">
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Nombre del curso</mat-label>
+                  <input type="text" matInput placeholder="Nombre del curso..." formControlName="nombre">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                    <mat-label>Nombre del profesor</mat-label>
+                    <input type="text" matInput placeholder="Nombre del profesor..." formControlName="profesor">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Fecha de inicio</mat-label>
+                  <input matInput [matDatepicker]="dpEditar1" placeholder="Fecha de inicio..." formControlName="fechaInicio">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matSuffix [for]="dpEditar1" ></mat-datepicker-toggle>
+                  <mat-datepicker #dpEditar1 disabled="false"></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Fecha de fin</mat-label>
+                  <input matInput [matDatepicker]="dpEditar2" placeholder="Fecha de fin..." formControlName="fechaFin">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matSuffix [for]="dpEditar2" ></mat-datepicker-toggle>
+                  <mat-datepicker #dpEditar2 disabled="false"></mat-datepicker>
+                </mat-form-field>
+                  <div class="col-6 text-center mt-5 pt-5">
+                    <button (click)="editar.toggle()" type="button" mat-flat-button class="btn-secondary w-100">CANCELAR</button>
+                  </div>
+                  <div class="col-6 text-center mt-5 pt-5">
+                    <button [disabled]="formularioEditarCurso.invalid" type="submit" class="w-100" color="primary" mat-flat-button>GUARDAR</button>
+                  </div>
+              </div>
+          </form>
+      </div>
+    </mat-drawer>
+  
+  </div>
+</div>
+  
