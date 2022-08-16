@@ -11,6 +11,7 @@ export class AlumnoService {
 
   //LISTADO DE ALUMNOS
   listaAlumnos: Alumno[] = [];
+  header : any = {"authorization": "token"}
 
 
   alumnos$ = new BehaviorSubject<Alumno[]>(this.listaAlumnos);
@@ -26,40 +27,36 @@ export class AlumnoService {
     alumno.id = alumnosOrderIdDesc[0].id + 1;
 
     return this.httpClient.post<Alumno[]>(environment.apiUrl + 'alumnos', alumno, 
-    {headers: new HttpHeaders ({"authorization": "token"})})
+    {headers: new HttpHeaders ()})
     .pipe(catchError((error) => {
-      console.log(error);
-      throw new Error();
+      throw new Error(error);
     }));
   }
 
   //ELIMINAR ALUMNO
   eliminarAlumno(id: number): Observable<Alumno[]> {
     return this.httpClient.delete<Alumno[]>(environment.apiUrl + 'alumnos/' + id,
-    {headers: new HttpHeaders ({"authorization": "token"})})
+    {headers: new HttpHeaders (this.header)})
     .pipe(catchError((error) => {
-      console.log(error);
-      throw new Error();
+      throw new Error(error);
     }));
   }
 
   //EDITAR ALUMNO
   editarAlumno(alumno: any): Observable<Alumno[]> {
     return this.httpClient.put<Alumno[]>(environment.apiUrl + 'alumnos/' + alumno.id, alumno,
-    {headers: new HttpHeaders ({"authorization": "token"})})
+    {headers: new HttpHeaders (this.header)})
     .pipe(catchError((error) => {
-      console.log(error);
-      throw new Error();
+      throw new Error(error);
     }));
   }
 
   //OBTENER ALUMNOS
   obtenerAlumnos(): Observable<Alumno[]> {
     return this.httpClient.get<Alumno[]>(environment.apiUrl + 'alumnos',
-    {headers: new HttpHeaders ({"authorization": "token"})})
+    {headers: new HttpHeaders (this.header)})
     .pipe(catchError((error) => {
-      console.log(error);
-      throw new Error();
+      throw new Error(error);
     }));
   }
 }

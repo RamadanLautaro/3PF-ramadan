@@ -1,12 +1,13 @@
 <div class="row overflow-x-hidden m-0 p-0">
 
     <mat-drawer-container class="example-container m-0 p-0" autosize>
-        <mat-toolbar color="primary">
+        <mat-toolbar class="navbar__custom" color="primary">
             <button mat-icon-button class="example-icon" aria-label="navbar" (click)="drawer.toggle()">
                 <mat-icon>menu</mat-icon>
             </button>
             <span class="navbar__brand" routerLink="/admin">ADMIN</span>
             <span class="example-spacer"></span>
+            <div class="salir" (click)="logout()">SALIR</div>
         </mat-toolbar>
     </mat-drawer-container>
 

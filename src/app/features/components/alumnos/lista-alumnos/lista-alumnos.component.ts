@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Alumno } from '../../../../models/alumno.model';
 import { AlumnoService } from 'src/app/services/alumno.service';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-lista-alumnos',
@@ -71,6 +71,12 @@ export class ListaAlumnosComponent implements OnInit, OnDestroy {
             this.dataSource = alumnos;
             this.error = false;
             this.obtenerAlumnos();
+            Swal.fire({
+              title: '¡Listo!',
+              text: 'Alumno agregado correctamente...',
+              icon: 'success',
+              confirmButtonText: 'ACEPTAR'
+            })
           },
           error: (mensajeError) => {
             this.mensajeError = mensajeError;
@@ -98,6 +104,12 @@ export class ListaAlumnosComponent implements OnInit, OnDestroy {
             this.dataSource = alumnos;
             this.error = false;
             this.obtenerAlumnos();
+            Swal.fire({
+              title: '¡Listo!',
+              text: 'Alumno eliminado correctamente...',
+              icon: 'success',
+              confirmButtonText: 'ACEPTAR'
+            })
           },
           error: (mensajeError) => {
             this.mensajeError = mensajeError;
@@ -117,6 +129,12 @@ export class ListaAlumnosComponent implements OnInit, OnDestroy {
             this.dataSource = alumnos;
             this.error = false;
             this.obtenerAlumnos();
+            Swal.fire({
+              title: '¡Listo!',
+              text: 'Alumno editado correctamente...',
+              icon: 'success',
+              confirmButtonText: 'ACEPTAR'
+            })
           },
           error: (mensajeError) => {
             this.mensajeError = mensajeError;

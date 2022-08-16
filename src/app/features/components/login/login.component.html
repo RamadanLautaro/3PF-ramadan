@@ -4,7 +4,7 @@
         <div class="col-12 text-center">
             <img src="../../../../assets/img/login.png" class="login__icon">
             <h1 *ngIf="!errorLogin" class="fs-1 fw-light text-center purpleText mt-3">LOGIN</h1>
-            <h1 *ngIf="errorLogin" class="fs-1 fw-bold text-center text-danger mt-3">USUARIO INCORRECTO</h1>
+            <h1 *ngIf="errorLogin && !(loading$ | async)" class="fs-1 fw-bold text-center text-danger mt-3">USUARIO INCORRECTO</h1>
         </div>
 
         <form [formGroup]="formularioLogin" (ngSubmit)="validarLogin()" class="col-4 mt-5">
@@ -18,7 +18,9 @@
                     <input type="password" matInput placeholder="Contraseña..." formControlName="password">
                 </mat-form-field>
                 <div class="col-12 text-center mt-3">
-                    <button [disabled]="formularioLogin.invalid" type="submit" class="w-100" color="primary" mat-flat-button>GUARDAR</button>
+                    <button [disabled]="formularioLogin.invalid || errorLogin || (loading$ | async)" type="submit" class="w-100" color="primary" mat-flat-button>
+                        {{(loading$ | async) || errorLogin ? 'CARGANDO...' : 'INICIAR SESIÓN'}}
+                    </button>
                 </div>
             </div>
         </form>

@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { map, pipe } from 'rxjs';
+import { LOGIN_ACTIONS } from '../../../store/actions/login.actions';
+import { LOGIN_SELECTORS } from '../../../store/selectors/login.selectors';
+import { Usuario } from '../../../models/usuario.model';
 
 
 @Component({
@@ -10,7 +15,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private store: Store) { }
 
   ngOnInit(): void {
     this.router.navigate([''])
@@ -21,20 +26,21 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required]),
   })
 
-  usuarioPrueba = {usuario: 'admin', password: 'admin'};
   errorLogin: boolean = false;
+  usuarioLogueado$ = this.store.select(LOGIN_SELECTORS.selectGetUser)
+  loading$ = this.store.select(LOGIN_SELECTORS.selectGetLoading)
 
   validarLogin() {
-    if (JSON.stringify(this.formularioLogin.value) === JSON.stringify(this.usuarioPrueba)) {
-      var hash = Math.random().toString(36).replace(/[^a-z]+/g, '').substring(0, 7);
-      localStorage.setItem("token", hash);
-    }
-    else
-    {
+    this.errorLogin = false;
+
+    this.store.dispatch(LOGIN_ACTIONS.Login.run({
+      usuario: this.formularioLogin.value.usuario!,
+      password: this.formularioLogin.value.password!
+    }))
+
+    if (this.usuarioLogueado$ != null && localStorage.getItem("token") === null) {
       this.errorLogin = true;
       setTimeout(() => {this.errorLogin = false;}, 1700);
     }
-
-    this.router.navigate([''])
   }
 }

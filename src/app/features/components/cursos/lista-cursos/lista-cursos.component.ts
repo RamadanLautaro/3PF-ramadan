@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Curso } from '../../../../models/curso.model';
 import { CursoService } from 'src/app/services/curso.service';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -61,13 +62,19 @@ export class ListaCursosComponent implements OnInit, OnDestroy {
   
   //AGREGAR CURSO
   agregarCurso() {
-    console.log(this.formularioAgregarCurso.value)
     this.subscription.add(
       this.cursoService.agregarCurso(this.formularioAgregarCurso.value).subscribe(
         {
           next: (cursos) => {
             this.dataSource = cursos;
             this.error = false;
+            this.obtenerCursos();
+            Swal.fire({
+              title: '¡Listo!',
+              text: 'Curso agregado correctamente...',
+              icon: 'success',
+              confirmButtonText: 'ACEPTAR'
+            })
           },
           error: (mensajeError) => {
             this.mensajeError = mensajeError;
@@ -94,6 +101,12 @@ export class ListaCursosComponent implements OnInit, OnDestroy {
             this.dataSource = cursos;
             this.error = false;
             this.obtenerCursos();
+            Swal.fire({
+              title: '¡Listo!',
+              text: 'Curso eliminado correctamente...',
+              icon: 'success',
+              confirmButtonText: 'ACEPTAR'
+            })
           },
           error: (mensajeError) => {
             this.mensajeError = mensajeError;
@@ -113,6 +126,12 @@ export class ListaCursosComponent implements OnInit, OnDestroy {
             this.dataSource = cursos;
             this.error = false;
             this.obtenerCursos();
+            Swal.fire({
+              title: '¡Listo!',
+              text: 'Curso editado correctamente...',
+              icon: 'success',
+              confirmButtonText: 'ACEPTAR'
+            })
           },
           error: (mensajeError) => {
             this.mensajeError = mensajeError;

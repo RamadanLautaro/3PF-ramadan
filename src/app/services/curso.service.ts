@@ -12,7 +12,7 @@ export class CursoService {
 
   //LISTADO DE CURSOS
   listaCursos: Curso[] = [];
-
+  header : any = {"authorization": "token"}
 
   cursos$ = new BehaviorSubject<Curso[]>(this.listaCursos);
   constructor(private httpClient: HttpClient) { }
@@ -27,40 +27,36 @@ export class CursoService {
     curso.id = cursosOrderIdDesc[0].id + 1;
 
     return this.httpClient.post<Curso[]>(environment.apiUrl + 'cursos', curso, 
-    {headers: new HttpHeaders ({"authorization": "token"})})
+    {headers: new HttpHeaders (this.header)})
     .pipe(catchError((error) => {
-      console.log(error);
-      throw new Error();
+      throw new Error(error);
     }));
   }
 
   //ELIMINAR CURSO
   eliminarCurso(id: number): Observable<Curso[]> {
     return this.httpClient.delete<Curso[]>(environment.apiUrl + 'cursos/' + id,
-    {headers: new HttpHeaders ({"authorization": "token"})})
+    {headers: new HttpHeaders (this.header)})
     .pipe(catchError((error) => {
-      console.log(error);
-      throw new Error();
+      throw new Error(error);
     }));
   }
 
   //EDITAR CURSO
   editarCurso(curso: any): Observable<Curso[]> {
     return this.httpClient.put<Curso[]>(environment.apiUrl + 'cursos/' + curso.id, curso,
-    {headers: new HttpHeaders ({"authorization": "token"})})
+    {headers: new HttpHeaders (this.header)})
     .pipe(catchError((error) => {
-      console.log(error);
-      throw new Error();
+      throw new Error(error);
     }));
   }
 
   //OBTENER CURSOS
   obtenerCursos(): Observable<Curso[]> {
     return this.httpClient.get<Curso[]>(environment.apiUrl + 'cursos',
-    {headers: new HttpHeaders ({"authorization": "token"})})
+    {headers: new HttpHeaders (this.header)})
     .pipe(catchError((error) => {
-      console.log(error);
-      throw new Error();
+      throw new Error(error);
     }));
   }
 }

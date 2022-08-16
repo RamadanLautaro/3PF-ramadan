@@ -7,5 +7,18 @@
 }
 
 .navbar__brand:hover{
-cursor: pointer;
+    cursor: pointer;
+}
+
+.navbar__custom{
+    position: relative;
+}
+
+.salir {
+    position: absolute;
+    right: 5%;
+}
+
+.salir:hover{
+    cursor: pointer;
 }

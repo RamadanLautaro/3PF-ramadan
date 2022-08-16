@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { LOGIN_SELECTORS } from '../../../store/selectors/login.selectors';
+import { LOGIN_ACTIONS } from '../../../store/actions/login.actions';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -8,8 +12,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() {}
-  ngOnInit(): void {}
+
+  constructor(private router: Router, private store: Store) {}
+  ngOnInit(): void {
+    this.verificarUsuario();
+  }
+
+  isLogged : boolean = false;
+
+  verificarUsuario() {
+    if (localStorage.getItem("token"))
+      this.isLogged = true;
+    else
+      this.isLogged = false;
+  }
+
+  logout() {
+    this.store.dispatch(LOGIN_ACTIONS.Logout.run())
+    this.router.navigate([''])
+    document.location.reload()
+  }
 
   showFiller = false;
 }
