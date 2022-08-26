@@ -1,5 +1,5 @@
-.overflow-x-hidden{
-    overflow-x: hidden;
+.overflow-hidden{
+    overflow: hidden;
 }
 
 .purpleText {
@@ -10,15 +10,10 @@
     cursor: pointer;
 }
 
-.navbar__custom{
-    position: relative;
-}
-
-.salir {
-    position: absolute;
-    right: 5%;
-}
-
 .salir:hover{
     cursor: pointer;
+}
+
+.admin {
+    background-color: #00be37;
 }

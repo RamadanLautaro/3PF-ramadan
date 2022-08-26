@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { LOGIN_SELECTORS } from '../../../../store/selectors/login.selectors';
 
 
 @Component({
@@ -8,9 +10,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MuroComponent implements OnInit {
 
-  constructor() { }
+  
+  constructor(private store: Store) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
+
+  usuarioLogueado_isAdmin$ = this.store.select(LOGIN_SELECTORS.selectGetUserIsAdmin)
 }

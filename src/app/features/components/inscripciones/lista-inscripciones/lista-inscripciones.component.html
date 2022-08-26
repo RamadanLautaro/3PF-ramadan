@@ -1,0 +1,128 @@
+<div class="drawer-container">
+
+    <!-- LISTA INSCRIPCIONES -->
+    <div class="row w-100 m-0 px-3 justify-content-center">
+      <div class="col-10">
+        <mat-card class="shadow-lg my-3">
+          <mat-card-header class="cardHeader mt-2 px-4">
+            <mat-card-title class="fs-1 fw-bold m-0 p-2 purpleText">LISTA DE INSCRIPCIONES</mat-card-title>
+            <div class="botonesHeader">
+              <input class="mx-5 px-3 py-1 filter" type="text" placeholder="Filtrar inscripciones..." [(ngModel)]="filtro" (keyup)="filtrar()">
+              <button mat-flat-button color="primary" (click)="agregar.toggle(); reiniciarSelect()">+ NUEVA</button>
+            </div>
+          </mat-card-header>
+          <mat-card-content class="row m-2 mt-3 p-4 table-responsive table_container">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 col-12">
+              <ng-container matColumnDef="idAlumno">
+                <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Alumno </th>
+                <td mat-cell *matCellDef="let inscripcion"> {{inscripcion.nombreAlumno}} (ID: {{inscripcion.idAlumno}}) </td>
+              </ng-container>
+              <ng-container matColumnDef="idCurso">
+                <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Curso </th>
+                <td mat-cell *matCellDef="let inscripcion"> {{inscripcion.nombreCurso}} (ID: {{inscripcion.idCurso}}) </td>
+              </ng-container>
+              <ng-container matColumnDef="fechaInscripcion">
+                <th mat-header-cell *matHeaderCellDef class="purpleText text-center" appFontSize20> Fecha Inscripción </th>
+                <td mat-cell *matCellDef="let inscripcion" class="text-center"> {{inscripcion.fechaInscripcion | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="idUsuario">
+                <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Inscripto por </th>
+                <td mat-cell *matCellDef="let inscripcion"> {{inscripcion.nombreUsuario}} (ID: {{inscripcion.idUsuario}}) </td>
+              </ng-container>
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let inscripcion; let i = index;" class="text-end">
+                  <a class="icono text-primary px-2" (click)="cargarFormularioEditarInscripcion(inscripcion); editar.toggle();">
+                    <mat-icon>edit</mat-icon>
+                  </a>
+                  <a class="icono text-danger px-2" (click)="eliminarInscripcion(inscripcion.id)">
+                    <mat-icon>delete</mat-icon>
+                  </a>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+  
+      <!-- AGREGAR INSCRIPCIÓN -->
+      <mat-drawer #agregar class="col-12">
+        <div class="row w-100 justify-content-center">
+          <div class="col-12 text-center">
+              <h1 class="fs-1 fw-light my-5 purpleText">AGREGAR INSCRIPCIÓN</h1>
+          </div>
+          <form [formGroup]="formularioAgregarInscripcion" (ngSubmit)="agregarInscripcion(); agregar.toggle();" class="col-4">
+              <div class="row">
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Seleccione un alumno</mat-label>
+                  <mat-select [(value)]="alumnoSeleccionado" formControlName="idAlumno">
+                    <mat-option value={{alumno.id}} *ngFor="let alumno of listaAlumnos">{{alumno.id}} - {{alumno.nombre}} {{alumno.apellido}} ({{alumno.email}})</mat-option>                    
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Seleccione un curso</mat-label>
+                  <mat-select [(value)]="cursoSeleccionado" formControlName="idCurso">
+                    <mat-option value={{curso.id}} *ngFor="let curso of listaCursos">{{curso.id}} - {{curso.nombre}} (profesor: {{curso.profesor}})</mat-option>                    
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Fecha de inscripción</mat-label>
+                  <input matInput [matDatepicker]="dpAgregar" placeholder="Fecha de inscripción..." formControlName="fechaInscripcion">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matSuffix [for]="dpAgregar" ></mat-datepicker-toggle>
+                  <mat-datepicker #dpAgregar disabled="false"></mat-datepicker>
+                </mat-form-field>  
+                <div class="col-6 text-center mt-5">
+                  <button (click)="agregar.toggle()" type="button" class="btn-secondary w-100" mat-flat-button>CANCELAR</button>
+                </div>
+                <div class="col-6 text-center mt-5">
+                  <button [disabled]="formularioAgregarInscripcion.invalid" type="submit" class="w-100" color="primary" mat-flat-button>GUARDAR</button>
+                </div>
+              </div>
+          </form>
+        </div>
+      </mat-drawer>
+      
+      <!-- EDITAR INSCRIPCIÓN -->
+      <mat-drawer #editar position="end" class="col-12">
+        <div class="row w-100 justify-content-center">
+            <div class="col-12 text-center">
+                <h1 class="fs-1 fw-light my-5 purpleText">EDITAR INSCRIPCIÓN</h1>
+            </div>
+            <form [formGroup]="formularioEditarInscripcion" (ngSubmit)="editarInscripcion(); editar.toggle()" class="col-4">
+                <div class="row">
+                  <mat-form-field appearance="outline" class="col-12">
+                    <mat-label>Seleccione un alumno</mat-label>
+                    <mat-select [(value)]="alumnoSeleccionado" formControlName="idAlumno">
+                      <mat-option value={{alumno.id}} *ngFor="let alumno of listaAlumnos">{{alumno.id}} - {{alumno.nombre}} {{alumno.apellido}} ({{alumno.email}})</mat-option>                    
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="col-12">
+                    <mat-label>Seleccione un curso</mat-label>
+                    <mat-select [(value)]="cursoSeleccionado" formControlName="idCurso">
+                      <mat-option value={{curso.id}} *ngFor="let curso of listaCursos">{{curso.id}} - {{curso.nombre}} (profesor: {{curso.profesor}})</mat-option>                    
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="col-12">
+                    <mat-label>Fecha de inscripción</mat-label>
+                    <input matInput [matDatepicker]="dpEditar" placeholder="Fecha de inscripción..." formControlName="fechaInscripcion">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matSuffix [for]="dpEditar" ></mat-datepicker-toggle>
+                    <mat-datepicker #dpEditar disabled="false"></mat-datepicker>
+                  </mat-form-field>  
+                    <div class="col-6 text-center mt-5">
+                      <button (click)="editar.toggle()" type="button" mat-flat-button class="btn-secondary w-100">CANCELAR</button>
+                    </div>
+                    <div class="col-6 text-center mt-5">
+                      <button [disabled]="formularioEditarInscripcion.invalid" type="submit" class="w-100" color="primary" mat-flat-button>GUARDAR</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+      </mat-drawer>
+    
+    </div>
+  </div>
+  

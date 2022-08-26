@@ -32,6 +32,13 @@
     max-height: 500px;
 }
 
-.aprobado {
-    background-color: #00be37;
+.filter {
+    width: 300px;
+    border-color: #673ab7;
+    border-radius: 35px;
+    border: 1px solid #673ab7;
+}
+
+.filter::placeholder {
+    color: #673ab7;
 }

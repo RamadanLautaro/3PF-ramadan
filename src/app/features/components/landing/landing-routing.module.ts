@@ -8,8 +8,9 @@ const routes: Routes = [
   { path: '', component: LandingComponent, children: [
     { path: '', component: MuroComponent},
     { path: 'alumnos', loadChildren: () => import('../alumnos/alumnos.module').then(x => x.AlumnosModule) },
-    { path: 'clases', loadChildren: () => import('../clases/clases.module').then(x => x.ClasesModule) },
-    { path: 'cursos', loadChildren: () => import('../cursos/cursos.module').then(x => x.CursosModule) }
+    { path: 'inscripciones', loadChildren: () => import('../inscripciones/inscripciones.module').then(x => x.InscripcionesModule) },
+    { path: 'cursos', loadChildren: () => import('../cursos/cursos.module').then(x => x.CursosModule) },
+    { path: 'usuarios', loadChildren: () => import('../usuarios/usuarios.module').then(x => x.UsuariosModule) },
   ] },
 ];
 

@@ -2,27 +2,32 @@
 
   <!-- LISTA ALUMNOS -->
   <div class="row w-100 m-0 px-3 justify-content-center">
-    <div class="col-9">
+    <div class="col-10">
       <mat-card class="shadow-lg my-3">
         <mat-card-header class="cardHeader mt-2 px-4">
           <mat-card-title class="fs-1 fw-bold m-0 p-2 purpleText">LISTA DE ALUMNOS</mat-card-title>
           <div class="botonesHeader">
-            <button mat-flat-button color="primary" (click)="agregar.toggle()">+ NUEVO</button>
+            <input class="mx-5 px-3 py-1 filter" type="text" placeholder="Filtrar alumnos..." [(ngModel)]="filtro" (keyup)="filtrar()">
+            <button [disabled]="(usuarioLogueado_isAdmin$ | async) === false" mat-flat-button color="primary" (click)="agregar.toggle()">+ NUEVO</button>
           </div>
         </mat-card-header>
         <mat-card-content class="row m-2 mt-3 p-4 table-responsive table_container">
           <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 col-12">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> ID </th>
+              <td mat-cell *matCellDef="let alumno"> {{alumno.id}} </td>
+            </ng-container>
             <ng-container matColumnDef="legajo">
-              <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> N° Legajo </th>
-              <td mat-cell *matCellDef="let alumno"> {{alumno.legajo}} </td>
+              <th mat-header-cell *matHeaderCellDef class="purpleText text-center" appFontSize20> N° Legajo </th>
+              <td mat-cell *matCellDef="let alumno" class="text-center"> {{alumno.legajo}} </td>
             </ng-container>
             <ng-container matColumnDef="nombre-apellido">
               <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Nombre y apellido </th>
               <td mat-cell *matCellDef="let alumno"> {{ alumno.nombre | nombreApellido: alumno.apellido }} </td>
             </ng-container>
             <ng-container matColumnDef="edad">
-              <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Edad </th>
-              <td mat-cell *matCellDef="let alumno"> {{alumno.edad}} </td>
+              <th mat-header-cell *matHeaderCellDef class="purpleText text-center" appFontSize20> Edad </th>
+              <td mat-cell *matCellDef="let alumno" class="text-center"> {{alumno.edad}} </td>
             </ng-container>
             <ng-container matColumnDef="email">
               <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Email </th>
@@ -31,10 +36,10 @@
             <ng-container matColumnDef="acciones">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let alumno; let i = index;" class="text-end">
-                <a class="icono text-primary px-2" (click)="cargarFormularioEditarAlumno(alumno); editar.toggle();">
+                <a *ngIf="usuarioLogueado_isAdmin$ | async" class="icono text-primary px-2" (click)="cargarFormularioEditarAlumno(alumno); editar.toggle();">
                   <mat-icon>edit</mat-icon>
                 </a>
-                <a class="icono text-danger px-2" (click)="eliminarAlumno(alumno.id)">
+                <a *ngIf="usuarioLogueado_isAdmin$ | async" class="icono text-danger px-2" (click)="eliminarAlumno(alumno.id)">
                   <mat-icon>delete</mat-icon>
                 </a>
               </td>

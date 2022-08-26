@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { Curso } from '../../../../models/curso.model';
 import { CursoService } from 'src/app/services/curso.service';
 import Swal from 'sweetalert2';
+import { Store } from '@ngrx/store';
+import { LOGIN_SELECTORS } from '../../../../store/selectors/login.selectors';
 
 
 @Component({
@@ -18,10 +20,11 @@ export class ListaCursosComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   listaCursos: Curso[] = [];
   dataSource = this.listaCursos;
-  displayedColumns: string[] = ['nombre', 'profesor', 'fechaInicio', 'fechaFin', 'acciones'];
+  displayedColumns: string[] = ['id', 'nombre', 'profesor', 'fechaInicio', 'fechaFin', 'horas', 'clases', 'acciones'];
+  usuarioLogueado_isAdmin$ = this.store.select(LOGIN_SELECTORS.selectGetUserIsAdmin)
 
   
-  constructor(private cursoService: CursoService) {}
+  constructor(private cursoService: CursoService, private store: Store) {}
 
   ngOnInit(): void {
     this.obtenerCursos();
@@ -32,13 +35,24 @@ export class ListaCursosComponent implements OnInit, OnDestroy {
   }
 
 
+  //FILTRAR CURSOS
+  filtro: string = ""
+  filtrar = () => {
+    this.dataSource = this.listaCursos.filter(x => x.id.toString().toLowerCase().includes(this.filtro.toLowerCase())
+    || x.nombre.toLowerCase().includes(this.filtro.toLowerCase()) 
+    || x.profesor.toLowerCase().includes(this.filtro.toLowerCase()))
+  }
+
+
   //FORMULARIO CURSO: AGREGAR
   formularioAgregarCurso = new FormGroup({
     id: new FormControl(0, [Validators.required]),
     nombre: new FormControl('', [Validators.required, Validators.minLength(3)]),
     profesor: new FormControl('', [Validators.required, Validators.minLength(5)]),
     fechaInicio: new FormControl(new Date(''), [Validators.required]),
-    fechaFin: new FormControl(new Date(''), [Validators.required])
+    fechaFin: new FormControl(new Date(''), [Validators.required]),
+    horas: new FormControl(0, [Validators.required, Validators.min(1)]),
+    clases: new FormControl(0, [Validators.required, Validators.min(1)])
   })
 
    //FORMULARIO CURSO: EDITAR
@@ -47,7 +61,9 @@ export class ListaCursosComponent implements OnInit, OnDestroy {
     nombre: new FormControl('', [Validators.required, Validators.minLength(3)]),
     profesor: new FormControl('', [Validators.required, Validators.minLength(5)]),
     fechaInicio: new FormControl(new Date(''), [Validators.required]),
-    fechaFin: new FormControl(new Date(''), [Validators.required])
+    fechaFin: new FormControl(new Date(''), [Validators.required]),
+    horas: new FormControl(0, [Validators.required, Validators.min(1)]),
+    clases: new FormControl(0, [Validators.required, Validators.min(1)])
   })
 
   //EDITAR CURSO: CARGAR FORMULARIO
@@ -57,6 +73,8 @@ export class ListaCursosComponent implements OnInit, OnDestroy {
     this.formularioEditarCurso.controls.profesor.setValue(curso.profesor);
     this.formularioEditarCurso.controls.fechaInicio.setValue(curso.fechaInicio);
     this.formularioEditarCurso.controls.fechaFin.setValue(curso.fechaFin);
+    this.formularioEditarCurso.controls.horas.setValue(curso.horas);
+    this.formularioEditarCurso.controls.clases.setValue(curso.clases);
   }
 
   
@@ -86,6 +104,8 @@ export class ListaCursosComponent implements OnInit, OnDestroy {
             this.formularioEditarCurso.controls.profesor.setErrors(null);
             this.formularioEditarCurso.controls.fechaInicio.setErrors(null);
             this.formularioEditarCurso.controls.fechaFin.setErrors(null);
+            this.formularioEditarCurso.controls.horas.setErrors(null);
+            this.formularioEditarCurso.controls.clases.setErrors(null);
           }
         }
       )
@@ -149,6 +169,7 @@ export class ListaCursosComponent implements OnInit, OnDestroy {
         {
           next: (cursos) => {
             this.dataSource = cursos;
+            this.listaCursos = cursos;
             this.error = false;
           },
           error: (mensajeError) => {

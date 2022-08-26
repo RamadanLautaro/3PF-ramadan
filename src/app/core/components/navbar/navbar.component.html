@@ -1,21 +1,41 @@
 <div class="row overflow-x-hidden m-0 p-0">
 
-    <mat-drawer-container class="example-container m-0 p-0" autosize>
-        <mat-toolbar class="navbar__custom" color="primary">
-            <button mat-icon-button class="example-icon" aria-label="navbar" (click)="drawer.toggle()">
-                <mat-icon>menu</mat-icon>
-            </button>
-            <span class="navbar__brand" routerLink="/admin">ADMIN</span>
-            <span class="example-spacer"></span>
-            <div class="salir" (click)="logout()">SALIR</div>
+    <mat-drawer-container class="m-0 p-0" autosize>
+        <mat-toolbar class="row m-0 p-0 overflow-hidden" color="primary">
+            <span [hidden]="usuarioLogueado_nombre$ | async" class="navbar__brand fs-2 col-12 mt-3" routerLink="/admin">ADMIN</span>
+            <div class="col-7">
+                <button mat-icon-button class="example-icon fs-1" aria-label="navbar" (click)="drawer.toggle()">
+                    <mat-icon *ngIf="usuarioLogueado_nombre$ | async">menu</mat-icon>
+                </button>
+                <span *ngIf="usuarioLogueado_nombre$ | async" class="navbar__brand fs-2 col-12 mt-3" routerLink="/admin">ADMIN</span>
+            </div>
+            <div class="col-5">
+                <div class="row">
+                    <div class="col-9 text-center">
+                        <span>{{usuarioLogueado_nombre$ | async}}</span>
+                        <span class="fs-6 badge rounded-pill admin mx-2" *ngIf="usuarioLogueado_isAdmin$ | async"> ADMINISTRADOR </span>
+                        <span class="fs-6 badge rounded-pill bg-primary mx-2" *ngIf="(usuarioLogueado_isAdmin$ | async) === false"> USUARIO </span>
+                    </div>
+                    <div class="col-3">
+                        <div *ngIf="usuarioLogueado_nombre$ | async" class="salir fs-3" (click)="logout()">SALIR
+                            <span class="material-symbols-outlined fs-5 fw-bold">
+                                logout
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </mat-toolbar>
     </mat-drawer-container>
 
     <mat-drawer #drawer class="col-2" (click)="drawer.toggle()">
-        <div class="overflow-x-hidden">
+        <div class="overflow-hidden">
             <div class="row justify-content-center">
                 <div class="col-10 mt-5">
                     <h1 class="fs-1 fw-light text-center mb-5 mt-5 purpleText">MENU</h1>
+                </div>
+                <div class="col-10 mt-5">
+                    <button *ngIf="usuarioLogueado_isAdmin$ | async" mat-flat-button color="primary" class="w-100" routerLink="usuarios">USUARIOS</button>
                 </div>
                 <div class="col-10 mt-5">
                     <button mat-flat-button color="primary" class="w-100" routerLink="alumnos">ALUMNOS</button>
@@ -24,7 +44,7 @@
                     <button mat-flat-button color="primary" class="w-100" routerLink="cursos">CURSOS</button>
                 </div>
                 <div class="col-10 mt-5 mb-5">
-                    <button mat-flat-button color="primary" class="w-100" routerLink="clases">CLASES</button>
+                    <button mat-flat-button color="primary" class="w-100" routerLink="inscripciones">INSCRIPCIONES</button>
                 </div>
                 <div class="col-10 mt-5">
                     <button mat-flat-button class="w-100 btn-secondary" routerLink="">INICIO</button>

@@ -13,7 +13,6 @@ export class AlumnoService {
   listaAlumnos: Alumno[] = [];
   header : any = {"authorization": "token"}
 
-
   alumnos$ = new BehaviorSubject<Alumno[]>(this.listaAlumnos);
   constructor(private httpClient: HttpClient) { }
 

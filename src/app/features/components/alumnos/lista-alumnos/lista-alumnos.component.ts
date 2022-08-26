@@ -4,6 +4,9 @@ import { Subscription } from 'rxjs';
 import { Alumno } from '../../../../models/alumno.model';
 import { AlumnoService } from 'src/app/services/alumno.service';
 import Swal from 'sweetalert2';
+import { Store } from '@ngrx/store';
+import { LOGIN_SELECTORS } from '../../../../store/selectors/login.selectors';
+
 
 @Component({
   selector: 'app-lista-alumnos',
@@ -17,10 +20,11 @@ export class ListaAlumnosComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   listaAlumnos: Alumno[] = [];
   dataSource = this.listaAlumnos;
-  displayedColumns: string[] = ['legajo', 'nombre-apellido', 'edad', 'email', 'acciones'];
+  displayedColumns: string[] = ['id', 'legajo', 'nombre-apellido', 'edad', 'email', 'acciones'];
+  usuarioLogueado_isAdmin$ = this.store.select(LOGIN_SELECTORS.selectGetUserIsAdmin)
 
 
-  constructor(private alumnoService: AlumnoService) {}
+  constructor(private alumnoService: AlumnoService, private store: Store) {}
 
   ngOnInit(): void {
     this.obtenerAlumnos();
@@ -31,6 +35,16 @@ export class ListaAlumnosComponent implements OnInit, OnDestroy {
   }
 
   
+  //FILTRAR ALUMNOS
+  filtro: string = ""
+  filtrar = () => {
+    this.dataSource = this.listaAlumnos.filter(x => x.id.toString().toLowerCase().includes(this.filtro.toLowerCase())
+    || x.nombre.toLowerCase().includes(this.filtro.toLowerCase()) 
+    || x.apellido.toLowerCase().includes(this.filtro.toLowerCase())
+    || x.email.toLowerCase().includes(this.filtro.toLowerCase()))
+  }
+
+
   //FORMULARIO ALUMNO: AGREGAR
   formularioAgregarAlumno = new FormGroup({
     id: new FormControl(0, [Validators.required]),
@@ -152,6 +166,7 @@ export class ListaAlumnosComponent implements OnInit, OnDestroy {
         {
           next: (alumnos) => {
             this.dataSource = alumnos;
+            this.listaAlumnos = alumnos;
             this.error = false;
           },
           error: (mensajeError) => {

@@ -1,0 +1,139 @@
+<div class="drawer-container">
+
+    <!-- LISTA USUARIOS -->
+    <div class="row w-100 m-0 px-3 justify-content-center">
+      <div class="col-10">
+        <mat-card class="shadow-lg my-3">
+          <mat-card-header class="cardHeader mt-2 px-4">
+            <mat-card-title class="fs-1 fw-bold m-0 p-2 purpleText">LISTA DE USUARIOS</mat-card-title>
+            <div class="botonesHeader">
+              <input class="mx-5 px-3 py-1 filter" type="text" placeholder="Filtrar usuarios..." [(ngModel)]="filtro" (keyup)="filtrar()">
+              <button mat-flat-button color="primary" (click)="agregar.toggle()">+ NUEVO</button>
+            </div>
+          </mat-card-header>
+          <mat-card-content class="row m-2 mt-3 p-4 table-responsive table_container">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 col-12">
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> ID </th>
+                <td mat-cell *matCellDef="let usuario"> {{usuario.id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="usuario">
+                <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Username </th>
+                <td mat-cell *matCellDef="let usuario"> {{usuario.usuario}} </td>
+              </ng-container>
+              <ng-container matColumnDef="password">
+                <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Password </th>
+                <td mat-cell *matCellDef="let usuario"> {{usuario.password}} </td>
+              </ng-container>
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Nombre </th>
+                <td mat-cell *matCellDef="let usuario"> {{usuario.nombre}} </td>
+              </ng-container>
+              <ng-container matColumnDef="direccion">
+                <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Dirección </th>
+                <td mat-cell *matCellDef="let usuario"> {{usuario.direccion}} </td>
+              </ng-container>
+              <ng-container matColumnDef="isAdmin">
+                <th mat-header-cell *matHeaderCellDef class="text-center purpleText" appFontSize20> Rol </th>
+                <td mat-cell *matCellDef="let usuario" class="text-center">
+                  <span *ngIf="!usuario.isAdmin" class="badge rounded-pill py-2 w-100 bg-primary">USUARIO</span>
+                  <span *ngIf="usuario.isAdmin" class="badge rounded-pill py-2 w-100 admin">ADMIN</span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let usuario; let i = index;" class="text-end">
+                  <a class="icono text-primary px-2" (click)="cargarFormularioEditarUsuario(usuario); editar.toggle();">
+                    <mat-icon>edit</mat-icon>
+                  </a>
+                  <a class="icono text-danger px-2" (click)="eliminarUsuario(usuario.id)">
+                    <mat-icon>delete</mat-icon>
+                  </a>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+  
+      <!-- AGREGAR USUARIO -->
+      <mat-drawer #agregar class="col-12">
+        <div class="row w-100 justify-content-center">
+          <div class="col-12 text-center">
+              <h1 class="fs-1 fw-light my-5 purpleText">AGREGAR USUARIO</h1>
+          </div>
+          <form [formGroup]="formularioAgregarUsuario" (ngSubmit)="agregarUsuario(); agregar.toggle();" class="col-4">
+              <div class="row">
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Username</mat-label>
+                  <input type="text" matInput placeholder="Nombre de usuario..." formControlName="usuario">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                    <mat-label>Password</mat-label>
+                    <input type="text" matInput placeholder="Password..." formControlName="password">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Nombre</mat-label>
+                  <input type="text" matInput placeholder="Nombre..." formControlName="nombre">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-12">
+                  <mat-label>Dirección</mat-label>
+                  <input type="text" matInput placeholder="Dirección..." formControlName="direccion">
+                </mat-form-field>
+                <div appearance="outline" class="col-12 mt-3">
+                  <mat-checkbox class="purpleText fs-6" color="primary" formControlName="isAdmin">ES ADMIN</mat-checkbox>
+                </div>
+                <div class="col-6 text-center mt-5">
+                  <button (click)="agregar.toggle()" type="button" class="btn-secondary w-100" mat-flat-button>CANCELAR</button>
+                </div>
+                <div class="col-6 text-center mt-5">
+                  <button [disabled]="formularioAgregarUsuario.invalid" type="submit" class="w-100" color="primary" mat-flat-button>GUARDAR</button>
+                </div>
+              </div>
+          </form>
+        </div>
+      </mat-drawer>
+      
+      <!-- EDITAR USUARIO -->
+      <mat-drawer #editar position="end" class="col-12">
+        <div class="row w-100 justify-content-center">
+            <div class="col-12 text-center">
+                <h1 class="fs-1 fw-light my-5 purpleText">EDITAR USUARIO</h1>
+            </div>
+            <form [formGroup]="formularioEditarUsuario" (ngSubmit)="editarUsuario(); editar.toggle()" class="col-4">
+                <div class="row">
+                    <mat-form-field appearance="outline" class="col-12">
+                        <mat-label>Username</mat-label>
+                        <input type="text" matInput placeholder="Nombre de usuario..." formControlName="usuario">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="col-12">
+                        <mat-label>Password</mat-label>
+                        <input type="text" matInput placeholder="Password..." formControlName="password">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="col-12">
+                      <mat-label>Nombre</mat-label>
+                      <input type="text" matInput placeholder="Nombre..." formControlName="nombre">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="col-12">
+                      <mat-label>Dirección</mat-label>
+                      <input type="text" matInput placeholder="Dirección..." formControlName="direccion">
+                    </mat-form-field>
+                    <div appearance="outline" class="col-12 mt-3">
+                      <mat-checkbox class="purpleText fs-6" color="primary" formControlName="isAdmin">ES ADMIN</mat-checkbox>
+                    </div>
+                    <div class="col-6 text-center mt-5">
+                      <button (click)="editar.toggle()" type="button" mat-flat-button class="btn-secondary w-100">CANCELAR</button>
+                    </div>
+                    <div class="col-6 text-center mt-5">
+                      <button [disabled]="formularioEditarUsuario.invalid" type="submit" class="w-100" color="primary" mat-flat-button>GUARDAR</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+      </mat-drawer>
+    
+    </div>
+  </div>
+  

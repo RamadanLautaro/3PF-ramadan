@@ -2,16 +2,21 @@
 
   <!-- LISTA CURSOS -->
   <div class="row w-100 m-0 px-3 justify-content-center">
-    <div class="col-9">
+    <div class="col-10">
       <mat-card class="shadow-lg my-3">
         <mat-card-header class="cardHeader mt-2 px-4">
           <mat-card-title class="fs-1 fw-bold m-0 p-2 purpleText">LISTA DE CURSOS</mat-card-title>
           <div class="botonesHeader">
-            <button mat-flat-button color="primary" (click)="agregar.toggle()">+ NUEVO</button>
+            <input class="mx-5 px-3 py-1 filter" type="text" placeholder="Filtrar cursos..." [(ngModel)]="filtro" (keyup)="filtrar()">
+            <button [disabled]="(usuarioLogueado_isAdmin$ | async) === false" mat-flat-button color="primary" (click)="agregar.toggle()">+ NUEVO</button>
           </div>
         </mat-card-header>
         <mat-card-content class="row m-2 mt-3 p-4 table-responsive table_container">
           <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 col-12">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> ID </th>
+              <td mat-cell *matCellDef="let curso"> {{curso.id}} </td>
+            </ng-container>
             <ng-container matColumnDef="nombre">
               <th mat-header-cell *matHeaderCellDef class="purpleText" appFontSize20> Nombre </th>
               <td mat-cell *matCellDef="let curso"> {{curso.nombre}} </td>
@@ -28,13 +33,21 @@
               <th mat-header-cell *matHeaderCellDef class="purpleText text-center" appFontSize20> Fecha Fin </th>
               <td mat-cell *matCellDef="let curso" class="text-center"> {{curso.fechaFin | date:'dd/MM/yyyy'}} </td>
             </ng-container>
+            <ng-container matColumnDef="horas">
+              <th mat-header-cell *matHeaderCellDef class="purpleText text-center" appFontSize20> Horas </th>
+              <td mat-cell *matCellDef="let curso" class="text-center"> {{curso.horas}} </td>
+            </ng-container>
+            <ng-container matColumnDef="clases">
+              <th mat-header-cell *matHeaderCellDef class="purpleText text-center" appFontSize20> Clases </th>
+              <td mat-cell *matCellDef="let curso" class="text-center"> {{curso.clases}} </td>
+            </ng-container>
             <ng-container matColumnDef="acciones">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let curso; let i = index;" class="text-end">
-                <a class="icono text-primary px-2" (click)="cargarFormularioEditarCurso(curso); editar.toggle();">
+                <a *ngIf="usuarioLogueado_isAdmin$ | async" class="icono text-primary px-2" (click)="cargarFormularioEditarCurso(curso); editar.toggle();">
                   <mat-icon>edit</mat-icon>
                 </a>
-                <a class="icono text-danger px-2" (click)="eliminarCurso(curso.id)">
+                <a *ngIf="usuarioLogueado_isAdmin$ | async" class="icono text-danger px-2" (click)="eliminarCurso(curso.id)">
                   <mat-icon>delete</mat-icon>
                 </a>
               </td>
@@ -62,19 +75,27 @@
                     <mat-label>Nombre del profesor</mat-label>
                     <input type="text" matInput placeholder="Nombre del profesor..." formControlName="profesor">
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="col-12">
+                <mat-form-field appearance="outline" class="col-6">
                   <mat-label>Fecha de inicio</mat-label>
                   <input matInput [matDatepicker]="dpAgregar1" placeholder="Fecha de inicio..." formControlName="fechaInicio">
                   <mat-hint>MM/DD/YYYY</mat-hint>
                   <mat-datepicker-toggle matSuffix [for]="dpAgregar1" ></mat-datepicker-toggle>
                   <mat-datepicker #dpAgregar1 disabled="false"></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="col-12">
+                <mat-form-field appearance="outline" class="col-6">
                   <mat-label>Fecha de fin</mat-label>
                   <input matInput [matDatepicker]="dpAgregar2" placeholder="Fecha de fin..." formControlName="fechaFin">
                   <mat-hint>MM/DD/YYYY</mat-hint>
                   <mat-datepicker-toggle matSuffix [for]="dpAgregar2" ></mat-datepicker-toggle>
                   <mat-datepicker #dpAgregar2 disabled="false"></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-6 mt-3">
+                  <mat-label>Cantidad de horas</mat-label>
+                  <input type="number" matInput placeholder="Cantidad de horas..." formControlName="horas">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-6 mt-3">
+                  <mat-label>Cantidad de clases</mat-label>
+                  <input type="number" matInput placeholder="Cantidad de clases..." formControlName="clases">
                 </mat-form-field>
                 <div class="col-6 text-center mt-5 pt-5">
                   <button (click)="agregar.toggle()" type="button" class="btn-secondary w-100" mat-flat-button>CANCELAR</button>
@@ -103,26 +124,34 @@
                     <mat-label>Nombre del profesor</mat-label>
                     <input type="text" matInput placeholder="Nombre del profesor..." formControlName="profesor">
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="col-12">
+                <mat-form-field appearance="outline" class="col-6">
                   <mat-label>Fecha de inicio</mat-label>
                   <input matInput [matDatepicker]="dpEditar1" placeholder="Fecha de inicio..." formControlName="fechaInicio">
                   <mat-hint>MM/DD/YYYY</mat-hint>
                   <mat-datepicker-toggle matSuffix [for]="dpEditar1" ></mat-datepicker-toggle>
                   <mat-datepicker #dpEditar1 disabled="false"></mat-datepicker>
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="col-12">
+                <mat-form-field appearance="outline" class="col-6">
                   <mat-label>Fecha de fin</mat-label>
                   <input matInput [matDatepicker]="dpEditar2" placeholder="Fecha de fin..." formControlName="fechaFin">
                   <mat-hint>MM/DD/YYYY</mat-hint>
                   <mat-datepicker-toggle matSuffix [for]="dpEditar2" ></mat-datepicker-toggle>
                   <mat-datepicker #dpEditar2 disabled="false"></mat-datepicker>
                 </mat-form-field>
-                  <div class="col-6 text-center mt-5 pt-5">
-                    <button (click)="editar.toggle()" type="button" mat-flat-button class="btn-secondary w-100">CANCELAR</button>
-                  </div>
-                  <div class="col-6 text-center mt-5 pt-5">
-                    <button [disabled]="formularioEditarCurso.invalid" type="submit" class="w-100" color="primary" mat-flat-button>GUARDAR</button>
-                  </div>
+                <mat-form-field appearance="outline" class="col-6 mt-3">
+                  <mat-label>Cantidad de horas</mat-label>
+                  <input type="number" matInput placeholder="Cantidad de horas..." formControlName="horas">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="col-6 mt-3">
+                  <mat-label>Cantidad de clases</mat-label>
+                  <input type="number" matInput placeholder="Cantidad de clases..." formControlName="clases">
+                </mat-form-field>
+                <div class="col-6 text-center mt-5 pt-5">
+                  <button (click)="editar.toggle()" type="button" mat-flat-button class="btn-secondary w-100">CANCELAR</button>
+                </div>
+                <div class="col-6 text-center mt-5 pt-5">
+                  <button [disabled]="formularioEditarCurso.invalid" type="submit" class="w-100" color="primary" mat-flat-button>GUARDAR</button>
+                </div>
               </div>
           </form>
       </div>

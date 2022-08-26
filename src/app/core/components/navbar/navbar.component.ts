@@ -12,13 +12,16 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
-
   constructor(private router: Router, private store: Store) {}
+
   ngOnInit(): void {
     this.verificarUsuario();
   }
 
   isLogged : boolean = false;
+  usuarioLogueado_nombre$ = this.store.select(LOGIN_SELECTORS.selectGetUserNombre)
+  usuarioLogueado_isAdmin$ = this.store.select(LOGIN_SELECTORS.selectGetUserIsAdmin)
+
 
   verificarUsuario() {
     if (localStorage.getItem("token"))

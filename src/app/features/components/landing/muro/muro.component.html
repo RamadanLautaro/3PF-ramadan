@@ -1,18 +1,23 @@
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-12 col-md-4 mt-3 p-0 ">
+        <div *ngIf="usuarioLogueado_isAdmin$ | async" class="col-12 col-md-3 mt-5 p-0">
+            <div class="card shadow-lg m-4 landing__card" routerLink="usuarios">
+                <img src="../../../../assets/img/usuarios.png" class="shadow-lg">
+            </div>
+        </div>
+        <div class="col-12 col-md-3 mt-5 p-0">
             <div class="card shadow-lg m-4 landing__card" routerLink="alumnos">
                 <img src="../../../../assets/img/alumnos.png" class="shadow-lg">
             </div>
         </div>
-        <div class="col-12 col-md-4 mt-3 p-0 ">
+        <div class="col-12 col-md-3 mt-5 p-0">
             <div class="card shadow-lg m-4 landing__card" routerLink="cursos">
                 <img src="../../../../assets/img/cursos.png" class="shadow-lg">
             </div>
         </div>
-        <div class="col-12 col-md-4 mt-3 p-0 ">
-            <div class="card shadow-lg m-4 landing__card" routerLink="clases">
-                <img src="../../../../assets/img/clases.png" class="shadow-lg">
+        <div class="col-12 col-md-3 mt-5 p-0">
+            <div class="card shadow-lg m-4 landing__card" routerLink="inscripciones">
+                <img src="../../../../assets/img/inscripciones.png" class="shadow-lg">
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { CursosRoutingModule } from './cursos-routing.module';
 import { ListaCursosComponent } from './lista-cursos/lista-cursos.component';
@@ -14,6 +15,7 @@ import { DirectivesModule } from '../../../shared/directives/directives.module';
   ],
   imports: [
     CommonModule,
+    FormsModule,
     CursosRoutingModule,
     MaterialModule,
     DirectivesModule
